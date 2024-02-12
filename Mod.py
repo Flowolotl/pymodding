@@ -1,3 +1,8 @@
+import re
+import os
+import shutil
+
+
 from ModComponent import ModComponent
 from ModBlock import ModBlock
 from ModItem import ModItem
@@ -7,10 +12,11 @@ from ModSettings import ModSettings
 
 
 class Mod:
-    def __init__(self, settings: ModSettings, id=None,) -> None:
-        if id is None:
+    def __init__(self, settings: ModSettings, name=None, id=None,) -> None:
+        if name is None:
             return TypeError()
-        self.id = id
+        self.name = name
+        self.id = id or re.sub(r'(?<!^)(?=[A-Z])', "_", name).lower()
         self.settings = {
             "loaders": []
         }
@@ -25,3 +31,6 @@ class Mod:
 
     def build(self):
         print("building mod")
+        if os.path.exists("./out"):
+            shutil.rmtree("./out")
+        os.mkdir("./out")
